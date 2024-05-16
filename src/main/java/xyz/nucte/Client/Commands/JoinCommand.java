@@ -1,6 +1,7 @@
 package xyz.nucte.Client.Commands;
 
 import xyz.nucte.msg.Message;
+import xyz.nucte.msg.MessageType;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,7 +14,7 @@ public class JoinCommand implements Command {
             return;
         }
         try {
-            Message msg = new Message("Protocol", "JOIN " + args[1]);
+            Message msg = new Message(MessageType.PROTOCOL, "JOIN " + args[1]);
             System.out.println(msg.toJSON());
             out.println(msg.toJSON());
         } catch (Exception e) {

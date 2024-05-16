@@ -2,25 +2,27 @@ package xyz.nucte.msg;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
+
 public class Message implements MessageObject {
-    private String type;
+    private MessageType type;
     private String content;
 
     public Message() {
     }
 
-    public Message(String type, String content) {
+    public Message(MessageType type, String content) {
         this.type = type;
         this.content = content;
     }
 
     @Override
-    public String getType() {
+    public MessageType getType() {
         return type;
     }
 
     @Override
-    public void setType(String type) {
+    public void setType(MessageType type) {
         this.type = type;
     }
 
@@ -34,12 +36,12 @@ public class Message implements MessageObject {
         this.content = content;
     }
 
-    public String toJSON() throws Exception {
+    public String toJSON() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(this);
     }
 
-    public static Message deserialize(String json) throws Exception {
+    public static Message deserialize(String json) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(json, Message.class);
     }

@@ -47,13 +47,6 @@
                         <goals>
                             <goal>shade</goal>
                         </goals>
-                        <configuration>
-                            <archive>
-                                <manifestEntries>
-                                    <Main-Class>xyz.nucte.IRC</Main-Class>
-                                </manifestEntries>
-                            </archive>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>

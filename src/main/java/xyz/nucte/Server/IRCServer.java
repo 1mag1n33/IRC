@@ -18,7 +18,8 @@ public class IRCServer {
     public static void main(String[] args) {
         try (ServerSocket serverSocket = new ServerSocket(SERVER_PORT)) {
             logger.info("IRC server started on port " + SERVER_PORT);
-
+            channels.put("#default", new Channel("#default"));
+            channels.put("#general", new Channel("#general"));
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 UUID clientId = UUID.randomUUID();

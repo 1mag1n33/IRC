@@ -3,6 +3,7 @@ package xyz.nucte.Client;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import xyz.nucte.msg.Message;
 import xyz.nucte.CommandParser;
+import xyz.nucte.msg.MessageType;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,9 +26,33 @@ public class IRCClient {
 
             System.out.println("Connected to IRC server");
 
-            // Read the welcome message from the server, which includes the client ID
-            String serverMessage = in.readLine();
-            System.out.println(serverMessage);
+            Thread messageListener = new Thread(() -> {
+                try {
+                    Message message;
+                    while ((message = Message.deserialize(in.readLine())) != null) {
+                        switch (message.getType()) {
+                            case INFO:
+                                System.out.println("Info: " + message.getContent());
+                                break;
+                            case MESSAGE:
+                                System.out.println("Message: " + message.getContent());
+                                break;
+                            case ERROR:
+                                System.out.println("Error: " + message.getContent());
+                                break;
+                            case PROTOCOL:
+                                System.out.println("Protocol: " + message.getContent());
+                                break;
+                            default:
+                                System.out.println("Unknown message type: " + message.getType());
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            messageListener.start();
+
 
             // Read input from the user and send it to the server or execute a command
             String userInput;
@@ -47,7 +72,7 @@ public class IRCClient {
 
     private static void sendMessage(PrintWriter out, String message) {
         try {
-            Message jsonMessage = new Message("message", message);
+            Message jsonMessage = new Message(MessageType.MESSAGE, message);
             String jsonString = objectMapper.writeValueAsString(jsonMessage);
             out.println(jsonString);
         } catch (IOException e) {
